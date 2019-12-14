@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    width: responsiveWidth(50),
+    width: responsiveWidth(46),
     borderRadius: 10,
     backgroundColor: '#FFF',
   },
@@ -70,7 +70,7 @@ function PostCard(props) {
           borderTopRightRadius: 10,
           borderTopLeftRadius: 10,
         }}
-        width={responsiveWidth(50)}
+        width={responsiveWidth(46)}
         resizeMode="contain"
       />
       <View style={styles.overview}>
