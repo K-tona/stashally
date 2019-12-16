@@ -98,6 +98,13 @@ function useFormInput() {
         payload: text,
       });
     },
+    checkInput: () => {
+      if (state.title !== '') {
+        return true;
+      } else {
+        return false;
+      }
+    },
     resetForm: () => {
       dispatch({type: 'RESET_FORM'});
     },

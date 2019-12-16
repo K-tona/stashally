@@ -27,10 +27,15 @@ import {useFormInput} from '../custom/hooks';
 import {Chip} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {navContext} from '../navigator/AppNavigator';
+import Dialog, {
+  DialogContent,
+  DialogButton,
+  DialogFooter,
+} from 'react-native-popup-dialog';
 
 function Posting(props) {
   // const {navigation} = props;
-  const {handler: navHandler} = useContext(navContext);
+  const {navState, handler: navHandler} = useContext(navContext);
   const [formState, formhandler] = useFormInput();
   const categoryList = useSelector(state => state.categories);
   const user = useSelector(state => state.user);
@@ -38,6 +43,7 @@ function Posting(props) {
   const refForm = useRef(null);
   const [photos, setPhotos] = useState([]);
   const [post, setPost] = useState();
+  const [openDialog, setOpenDialog] = useState(false);
 
   const styles = StyleSheet.create({
     headerContainer: {
@@ -52,6 +58,13 @@ function Posting(props) {
       color: '#FFF',
     },
   });
+
+  useEffect(() => {
+    const {availableRoutes, activeIndex} = navState;
+    if (availableRoutes[activeIndex].value === 'posting') {
+      formhandler.resetForm();
+    }
+  }, [navState.activeIndex]);
 
   useEffect(() => {
     if (post) {
@@ -72,18 +85,22 @@ function Posting(props) {
             top: responsiveHeight(4),
           }}
           onPress={() => {
-            formhandler.setFieldTouched(photos, 'images');
-            setPost({
-              id: formState.title,
-              title: formState.title,
-              user_id: user.id,
-              images: photos,
-              description: formState.description,
-              categories: formState.categories.map(c => c.value),
-              groups: formState.groups.map(g => g.value),
-              product: formState.product.map(p => p.value),
-              stashes: formState.stashes.map(s => s.value),
-            });
+            if (formhandler.checkInput() === true) {
+              formhandler.setFieldTouched(photos, 'images');
+              setPost({
+                id: formState.title,
+                title: formState.title,
+                user_id: user.id,
+                images: photos,
+                description: formState.description,
+                categories: formState.categories.map(c => c.value),
+                groups: formState.groups.map(g => g.value),
+                product: formState.product.map(p => p.value),
+                stashes: formState.stashes.map(s => s.value),
+              });
+            } else {
+              setOpenDialog(true);
+            }
           }}>
           <Text style={styles.headerfont}>Post</Text>
         </TouchableOpacity>
@@ -207,6 +224,21 @@ function Posting(props) {
             )}
           />
         </CustomAddInput>
+        <Dialog
+          visible={openDialog}
+          onTouchOutside={() => setOpenDialog(false)}>
+          <DialogContent style={{paddingTop: responsiveHeight(3)}}>
+            <Text style={{fontSize: responsiveFontSize(2)}}>
+              Please fill in the required title
+            </Text>
+          </DialogContent>
+          <DialogFooter
+            style={{flexDirection: 'row-reverse', padding: responsiveWidth(3)}}>
+            <TouchableOpacity onPress={() => setOpenDialog(false)}>
+              <Text style={{color: '#DF99FF'}}>Okay</Text>
+            </TouchableOpacity>
+          </DialogFooter>
+        </Dialog>
         {/* <Formik
                     initialValues={{
                         title: '',

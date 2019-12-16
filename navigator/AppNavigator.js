@@ -10,6 +10,7 @@ import {CustomBottomBar} from '../custom/component';
 import CommingSoon from '../screen/CommingSoon';
 import Home from '../screen/Home';
 import Posting from '../screen/Posting';
+import {useDispatch} from 'react-redux';
 
 const styles = StyleSheet.create({
   content: {
@@ -49,7 +50,6 @@ const scrollY = new Animated.Value(0);
 
 function AppNavigator(props) {
   const {state: navState, handler: navHandler} = useNavigation();
-  const {availableRoutes, activeIndex} = navState;
   const navigationStyle = StyleSheet.create({
     pointer: {
       height: responsiveHeight(1),
