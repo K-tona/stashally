@@ -61,7 +61,10 @@ function Posting(props) {
 
   useEffect(() => {
     const {availableRoutes, activeIndex} = navState;
-    if (availableRoutes[activeIndex].value === 'posting') {
+    if (
+      availableRoutes.length > 0 &&
+      availableRoutes[activeIndex].value === 'posting'
+    ) {
       formhandler.resetForm();
     }
   }, [navState.activeIndex]);
